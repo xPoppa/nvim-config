@@ -4,6 +4,9 @@
 -- Set highlight on search
 vim.o.hlsearch = false
 
+-- set always thick cursor
+vim.o.guicursor = 'a:block'
+
 -- Make line numbers default
 vim.wo.number = true
 vim.o.relativenumber = true
@@ -14,7 +17,7 @@ vim.o.mouse = 'a'
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.o.clipboard = 'unnamedplus'
+vim.o.clipboard = 'unnamed'
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -46,3 +49,9 @@ vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
 -- set colorcolumn
 vim.o.colorcolumn = "80"
+
+-- Need these for saving and stuff
+vim.cmd([[command! -nargs=0 WQ wq]])
+vim.cmd([[command! -nargs=0 Wq wq]])
+vim.cmd([[command! -nargs=0 W w]])
+vim.cmd([[command! -nargs=0 Q q]])

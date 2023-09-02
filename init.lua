@@ -83,7 +83,7 @@ require('lazy').setup({
       'williamboman/mason-lspconfig.nvim',
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim',       opts = {} },
+      { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
     },
   },
 
@@ -96,9 +96,12 @@ require('lazy').setup({
         'nvim-lua/plenary.nvim',
         'nvim-telescope/telescope.nvim'
       },
-      branch = '1.x.x',
+      branch = '2.x.x',
+      ft = { 'haskell', 'lhaskell', 'cabal', 'cabalproject', 'stack', 'stackproject' }
     },
 
+  },
+  { 'sdiehl/vim-ormolu'
   },
 
   {
@@ -106,6 +109,7 @@ require('lazy').setup({
     'hrsh7th/nvim-cmp',
     dependencies = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
   },
+  "mhartington/formatter.nvim",
 
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim',          opts = {} },
@@ -263,10 +267,10 @@ vim.keymap.set('n', '<leader>/', function()
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
+vim.keymap.set('n', '<leader>wg', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
+vim.keymap.set('n', '<leader>rg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 
 
@@ -405,9 +409,9 @@ end
 local servers = {
   -- clangd = {},
   -- gopls = {},
-  -- pyright = {},
+  pyright = {},
   -- rust_analyzer = {},
-  -- tsserver = {},
+  tsserver = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -420,8 +424,6 @@ local servers = {
 -- Setup neovim lua configuration
 require('neodev').setup()
 -- setup haskell-tools configuration
-require('haskell-tools').setup({})
-require('haskell-tools').setup {}
 
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
@@ -488,6 +490,34 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
   },
+}
+
+-- local formatter_util = require("formatter.util")
+--
+
+
+-- Provides the Format, FormatWrite, FormatLock, and FormatWriteLock commands
+require("formatter").setup {
+  -- Enable or disable logging
+  logging = true,
+  -- Set the log level
+  log_level = vim.log.levels.WARN,
+  -- All formatter configurations are opt-in
+  filetype = {
+    -- Formatter configurations for filetype "lua" go here
+    -- and will be executed in order
+    typescriptreact = {
+      require("formatter.filetypes.typescriptreact").prettierd
+    },
+
+    -- Use the special "*" filetype for defining formatter configurations on
+    -- any filetype
+    ["*"] = {
+      -- "formatter.filetypes.any" defines default configurations for any
+      -- filetype
+      require("formatter.filetypes.any").remove_trailing_whitespace
+    }
+  }
 }
 
 -- haskell settings
