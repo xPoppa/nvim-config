@@ -22,6 +22,9 @@ vim.o.clipboard = 'unnamed'
 -- Enable break indent
 vim.o.breakindent = true
 
+-- 2 space tabstop
+vim.o.tabstop = 2
+
 -- Save undo history
 vim.o.undofile = true
 

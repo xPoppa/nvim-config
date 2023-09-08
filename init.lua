@@ -97,11 +97,9 @@ require('lazy').setup({
         'nvim-telescope/telescope.nvim'
       },
       branch = '2.x.x',
-      ft = { 'haskell', 'lhaskell', 'cabal', 'cabalproject', 'stack', 'stackproject' }
+      ft = { 'haskell', 'lhaskell' }
     },
 
-  },
-  { 'sdiehl/vim-ormolu'
   },
 
   {
@@ -396,9 +394,9 @@ local on_attach = function(_, bufnr)
   end, '[W]orkspace [L]ist Folders')
 
   -- Create a command `:Format` local to the LSP buffer
-  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-    vim.lsp.buf.format()
-  end, { desc = 'Format current buffer with LSP' })
+  --  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
+  --    vim.lsp.buf.format()
+  --  end, { desc = 'Format current buffer with LSP' })
 end
 
 -- Enable the following language servers
@@ -509,19 +507,34 @@ require("formatter").setup {
     typescriptreact = {
       require("formatter.filetypes.typescriptreact").prettierd
     },
+    haskell = {
+      require("formatter.filetypes.haskell").ormolu
+    }
 
     -- Use the special "*" filetype for defining formatter configurations on
     -- any filetype
-    ["*"] = {
-      -- "formatter.filetypes.any" defines default configurations for any
-      -- filetype
-      require("formatter.filetypes.any").remove_trailing_whitespace
-    }
   }
 }
 
 -- haskell settings
 --
+vim.g.haskell_tools = {
+  hls = {
+    settings = {
+      haskell = {
+        formattingProvider = { "ormolu" },
+        plugin = {
+          importLens = { -- make import lists fully explicit
+            codeLensOn = false,
+          },
+          refineImports = { -- refine imports
+            codeLensOn = false,
+          },
+        },
+      },
+    },
+  },
+}
 --
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
