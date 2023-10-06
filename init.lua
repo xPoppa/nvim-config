@@ -106,6 +106,7 @@ require('lazy').setup({
     },
 
   },
+  "pbrisbin/vim-syntax-shakespeare",
 
   {
     -- Autocompletion
