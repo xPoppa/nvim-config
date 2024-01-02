@@ -107,6 +107,11 @@ require('lazy').setup({
 
   },
 
+  { 'sdiehl/vim-ormolu' },
+  -- Syntax highlighting for shakespearean templates
+  { "pbrisbin/vim-syntax-shakespeare" },
+  { "pearofducks/ansible-vim" },
+
   {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -399,9 +404,9 @@ local on_attach = function(_, bufnr)
   end, '[W]orkspace [L]ist Folders')
 
   -- Create a command `:Format` local to the LSP buffer
-  --  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-  --    vim.lsp.buf.format()
-  --  end, { desc = 'Format current buffer with LSP' })
+  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
+    vim.lsp.buf.format()
+  end, { desc = 'Format current buffer with LSP' })
 end
 
 -- Enable the following language servers
@@ -410,11 +415,14 @@ end
 --  Add any additional override configuration in the following tables. They will be passed to
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
+  sqlls = {},
   -- clangd = {},
   -- gopls = {},
   pyright = {},
   -- rust_analyzer = {},
+  elmls = {},
   tsserver = {},
+  ansiblels = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -423,6 +431,8 @@ local servers = {
   },
 }
 
+vim.g.ormolu_options = { "-o -XTypeApplications" }
+--let g:ormolu_options=["-o -XTypeApplications"]
 
 -- Setup neovim lua configuration
 require('neodev').setup()
@@ -587,10 +597,12 @@ vim.g.haskell_tools = {
             ht.repl.toggle(vim.api.nvim_buf_get_name(0))
           end, { noremap = true, silent = true, buffer = bufnr, })
           vim.keymap.set('n', '<leader>rq', ht.repl.quit, { buffer = bufnr })
+          -- Renaming for LSP
+          vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { buffer = bufnr, desc = '[Re][N]ame' })
         end,
     settings = {
       haskell = {
-        formattingProvider = { "ormolu" },
+        formattingProvider = "ormolu",
       },
     },
   },
