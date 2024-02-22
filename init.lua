@@ -106,6 +106,7 @@ require('lazy').setup({
     },
 
   },
+  "pbrisbin/vim-syntax-shakespeare",
 
   {
     -- Autocompletion
@@ -155,15 +156,14 @@ require('lazy').setup({
   },
 
   {
-    -- Add indentation guides even on blank lines
-    'lukas-reineke/indent-blankline.nvim',
-    -- Enable `lukas-reineke/indent-blankline.nvim`
-    -- See `:help indent_blankline.txt`
+    "lukas-reineke/indent-blankline.nvim",
+    version = "2.20.8",
     opts = {
       char = '┊',
       show_trailing_blankline_indent = false,
     },
   },
+
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim',         opts = {} },
@@ -232,6 +232,9 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
+-- Keymap to go to explore page
+vim.keymap.set('n', '<leader>ee', ':Explore<CR>', { nowait = true, silent = true })
+
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
@@ -277,7 +280,10 @@ vim.keymap.set('n', '<leader>rg', require('telescope.builtin').live_grep, { desc
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 
 
+-- Chtst command
+vim.keymap.set('n', '<leader>i', ':! tmux neww tmux-cht.sh<CR>', { noremap = true, silent = true })
 
+-- go specific server error keymap
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -411,8 +417,10 @@ end
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
   -- clangd = {},
-  -- gopls = {},
+  sqlls = {},
+  gopls = {},
   pyright = {},
+  htmx = {},
   -- rust_analyzer = {},
   tsserver = {},
   lua_ls = {
@@ -470,25 +478,8 @@ cmp.setup {
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
     },
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
-  },
+    ['<Tab>'] = nil,
+    ['<S-Tab>'] = nil, },
   sources = {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },

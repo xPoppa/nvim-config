@@ -58,3 +58,9 @@ vim.cmd([[command! -nargs=0 WQ wq]])
 vim.cmd([[command! -nargs=0 Wq wq]])
 vim.cmd([[command! -nargs=0 W w]])
 vim.cmd([[command! -nargs=0 Q q]])
+
+-- Nice way to navigate panes
+vim.api.nvim_set_keymap('n', '<C-J>', '<C-W><C-J>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<C-K>', '<C-W><C-K>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<C-L>', '<C-W><C-L>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<C-H>', '<C-W><C-H>', { noremap = true })
